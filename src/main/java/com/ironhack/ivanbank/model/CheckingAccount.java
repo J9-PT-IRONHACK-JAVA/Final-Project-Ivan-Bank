@@ -1,20 +1,17 @@
 package com.ironhack.ivanbank.model;
 
 import com.ironhack.ivanbank.model.utils.Money;
+import com.ironhack.ivanbank.utils.Iban;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.util.Optional;
+import java.util.Random;
 
 @Data
-@NoArgsConstructor
 @Entity
 public class CheckingAccount {
 
@@ -23,7 +20,6 @@ public class CheckingAccount {
     private Long id;
     @Embedded
     private Money balance;
-    private SecretKey secretKey;
     @ManyToOne
     private AccountHolder primaryOwner;
     @ManyToOne
@@ -35,22 +31,53 @@ public class CheckingAccount {
     private Instant creationDate;
     private Boolean isActive;
 
-    public CheckingAccount(AccountHolder primaryOwner, BigDecimal minimumBalance, BigDecimal penaltyFee, BigDecimal monthlyMaintenanceFee) throws NoSuchAlgorithmException {
+    public CheckingAccount() {
         this.balance = new Money(BigDecimal.valueOf(0));
-        this.secretKey = KeyGenerator.getInstance("AES").generateKey();
-        this.primaryOwner = primaryOwner;
-        this.minimumBalance = minimumBalance;
-        this.penaltyFee = penaltyFee;
-        this.monthlyMaintenanceFee = monthlyMaintenanceFee;
+        this.minimumBalance = BigDecimal.valueOf(250);
+        this.penaltyFee = BigDecimal.valueOf(40);
+        this.monthlyMaintenanceFee = BigDecimal.valueOf(12);
+        this.isActive = true;
     }
 
-    public CheckingAccount(AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal minimumBalance, BigDecimal penaltyFee, BigDecimal monthlyMaintenanceFee) throws NoSuchAlgorithmException {
+    //Normal checking account with one owner
+    public CheckingAccount(AccountHolder primaryOwner) {
         this.balance = new Money(BigDecimal.valueOf(0));
-        this.secretKey = KeyGenerator.getInstance("AES").generateKey();
+        this.primaryOwner = primaryOwner;
+        this.minimumBalance = BigDecimal.valueOf(250);
+        this.penaltyFee = BigDecimal.valueOf(40);
+        this.monthlyMaintenanceFee = BigDecimal.valueOf(12);
+        this.isActive = true;
+    }
+
+    //Normal checking account with two owners
+    public CheckingAccount(AccountHolder primaryOwner, AccountHolder secondaryOwner) {
+        this.balance = new Money(BigDecimal.valueOf(0));
+        this.primaryOwner = primaryOwner;
+        this.secondaryOwner = secondaryOwner;
+        this.minimumBalance = BigDecimal.valueOf(250);
+        this.penaltyFee = BigDecimal.valueOf(40);
+        this.monthlyMaintenanceFee = BigDecimal.valueOf(12);
+        this.isActive = true;
+    }
+
+    //Used in SavingAccount and StudentCheckingAccount with one owner
+    public CheckingAccount(AccountHolder primaryOwner, BigDecimal minimumBalance, BigDecimal monthlyMaintenanceFee) {
+        this.balance = new Money(BigDecimal.valueOf(0));
+        this.primaryOwner = primaryOwner;
+        this.minimumBalance = minimumBalance;
+        this.penaltyFee = BigDecimal.valueOf(40);
+        this.monthlyMaintenanceFee = monthlyMaintenanceFee;
+        this.isActive = true;
+    }
+
+    //Used in SavingAccount and StudentCheckingAccount with two owner
+    public CheckingAccount(AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal minimumBalance, BigDecimal monthlyMaintenanceFee) {
+        this.balance = new Money(BigDecimal.valueOf(0));
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
         this.minimumBalance = minimumBalance;
-        this.penaltyFee = penaltyFee;
+        this.penaltyFee = BigDecimal.valueOf(40);
         this.monthlyMaintenanceFee = monthlyMaintenanceFee;
+        this.isActive = true;
     }
 }

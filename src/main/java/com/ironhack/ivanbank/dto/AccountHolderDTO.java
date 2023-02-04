@@ -1,30 +1,25 @@
-package com.ironhack.ivanbank.model;
+package com.ironhack.ivanbank.dto;
 
 import com.ironhack.ivanbank.model.utils.Address;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@Entity
-public class AccountHolder {
+public class AccountHolderDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private LocalDate dateOfBirth;
+    @NotNull
     private String passport;
-
-    @Embedded
+    @NotNull
     private Address primaryAddress;
-
     private String mailingAddress;
 
-    public AccountHolder(String name, LocalDate dateOfBirth, String passport,Address primaryAddress, String mailingAddress) {
+    public AccountHolderDTO(String name, LocalDate dateOfBirth, String passport,Address primaryAddress, String mailingAddress) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.passport = passport;

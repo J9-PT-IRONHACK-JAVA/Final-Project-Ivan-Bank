@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CheckingAccountRepository extends JpaRepository<CheckingAccount, Long> {
+
 }
